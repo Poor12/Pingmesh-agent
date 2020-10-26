@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pingmesh-agent
+ namespace: kube-system
+ labels:
+  name: pingmesh-agent
+spec:
+ containers:
+ - name: pingmesh-agent
+   image: pingmesh-agent:1.0
+   imagePullPolicy: Never
+   ports:
+    - name: http
+      containerPort: 10009
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: pma-service
+  namespace: kube-system
+spec:
+  ports:
+    - name: http
+      port: 10009
+  selector:     
+    name: pingmesh-agent
