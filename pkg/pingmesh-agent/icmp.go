@@ -52,7 +52,7 @@ func ProbeICMPs(pl pinglist) ([]([]*ProberResultOne)){
 				TargetAddr: url,
 				SourceRegion: pl.Patition,
 				TargetRegion: patition,
-				ProbeType: "Ping",
+				ProbeType: "icmp",
 			}
 			ts = append(ts,t)
 		}

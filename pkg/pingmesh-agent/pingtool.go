@@ -95,6 +95,7 @@ func (c *PingTool) Ping(baseCtx context.Context) error{
 		Scheme: "http",
 		Host: net.JoinHostPort(DefaultPingmeshServiceAddr,DefaultPingmeshServerPort),
 	}).String() + DefaultPingmeshUploadURL
+	klog.Info(pros)
 	for _, pro := range pros {
 		for _, metrics := range pro {
 			mjson, _ := json.Marshal(metrics)
