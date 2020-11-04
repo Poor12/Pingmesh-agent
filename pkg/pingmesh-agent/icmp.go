@@ -38,7 +38,7 @@ func execCmd(cmdStr string) (success bool, outStr string) {
 		return false, string(stderr.Bytes())
 	}
 	outStr = string(stdout.Bytes())
-	fmt.Println(outStr)
+	//klog.Info("outStr: \n%s\n",outStr)
 	return true, outStr
 
 }
@@ -65,6 +65,7 @@ func ProbeICMPs(pl pinglist) ([]([]*ProberResultOne)){
 	}
 	return pros
 }
+
 func ProbeICMP(t *Target) ([]*ProberResultOne){
 
 	defer func() {
@@ -77,7 +78,7 @@ func ProbeICMP(t *Target) ([]*ProberResultOne){
 
 	pingCmd := fmt.Sprintf("/usr/bin/timeout --signal=KILL 15s ping -q -A -f -s 100 -W 1000 -c 50 -i 0.2 %s", t.TargetAddr)
 	//level.Info(lt.logger).Log("msg", "LocalTarget  ProbeICMP start ...", "uid", lt.Uid(), "pingcmd", pingCmd)
-	klog.V(6).Infof("ProbeICMP start, targetUrl:"+t.TargetAddr)
+	klog.Infof("ProbeICMP start, targetUrl:"+t.TargetAddr)
 	success, outPutStr := execCmd(pingCmd)
 	prs := make([]*ProberResultOne, 0)
 	var (
@@ -102,10 +103,10 @@ func ProbeICMP(t *Target) ([]*ProberResultOne){
 		Value:        float32(pingSuccess),
 	}
 	if success == false {
-		klog.V(6).Info("ProbeICMP failed, err_str: ", outPutStr)
+		klog.Info("ProbeICMP failed, err_str: ", outPutStr)
 
 		if strings.Contains(outPutStr, "killed") {
-			klog.V(6).Info("ProbeICMP killed, err_str: ", outPutStr)
+			klog.Info("ProbeICMP killed, err_str: ", outPutStr)
 			prSu.Value = -1
 			prs = append(prs, &prSu)
 			return prs
@@ -126,7 +127,6 @@ func ProbeICMP(t *Target) ([]*ProberResultOne){
 	}
 
 	if len(pkgdLine) > 0 {
-
 		pkgRate := strings.Split(pkgdLine, " ")[5]
 		pkgRate = strings.Replace(pkgRate, "%", "", -1)
 		pkgRateNum, _ = strconv.ParseFloat(pkgRate, 64)
@@ -140,7 +140,7 @@ func ProbeICMP(t *Target) ([]*ProberResultOne){
 		pingEwmaNum, _ = strconv.ParseFloat(pingEwma, 64)
 	}
 
-	klog.V(6).Infof( "ProbeICMP_one_res, pingcmd:%s, outPutStr:%s, pkgRateNum:%f, pingEwmaNum:%f",  pingCmd, outPutStr, float32(pkgRateNum), float32(pingEwmaNum))
+	klog.Infof( "ProbeICMP_one_res, pingcmd:%s, pkgRateNum:%f, pingEwmaNum:%f",  pingCmd, float32(pkgRateNum), float32(pingEwmaNum))
 
 	prDr := ProberResultOne{
 		MetricName:   MetricsNamePingPackageDrop,
