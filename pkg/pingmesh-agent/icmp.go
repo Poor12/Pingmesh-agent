@@ -47,6 +47,9 @@ func ProbeICMPs(pl pinglist) ([]([]*ProberResultOne)){
 	ts := make([]*Target,0)
 	for patition,urls := range pl.PingList{
 		for _, url := range urls {
+			if url == pl.WorkerName{
+				continue
+			}
 			t := &Target{
 				WorkName: pl.WorkerName,
 				TargetAddr: url,
